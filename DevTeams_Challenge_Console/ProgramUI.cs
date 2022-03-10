@@ -52,10 +52,10 @@ namespace DevTeams_Challenge_Console
                         DisplayDevelopersById();
                         break;
                     case "5":
-                        //UpdateExistingDeveloper();
+                        UpdateExistingDeveloper();
                         break;
                     case "6":
-                        //DeleteExistingDeveloper();
+                        DeleteExistingDeveloper();
                         break;
                     case "7":
                     case "exit":
@@ -159,6 +159,102 @@ namespace DevTeams_Challenge_Console
         }
 
 
+        private void UpdateExistingDeveloper()
+        {
+
+            Console.Clear();
+            List<Developer> listOfDevs = _repo.GetAllDevs();
+            foreach (Developer dev in listOfDevs)
+            {
+                ShowDevs(dev);
+
+            }
+
+
+            Console.Write("Please provide the ID number of the developer you would like to update: ");
+            int answer = int.Parse(Console.ReadLine());
+
+            Developer oldDev = _repo.GetDevById(answer);
+
+            if (oldDev != null)
+            {
+
+                Console.Write("Please enter new first name: ");
+                string newName = Console.ReadLine();
+                if (newName != "")
+                {
+                    oldDev.FirstName = newName;
+                }
+
+                Console.Write("Please enter new last name: ");
+                string newLast = Console.ReadLine();
+                if (newLast != "")
+                {
+                    oldDev.LastName = newLast;
+                }
+
+                Console.Write("Please enter the new ID number: ");
+                string newiD = Console.ReadLine();
+
+                if (newiD != "")
+                {
+                    oldDev.ID = int.Parse(newiD);
+                }
+
+                Console.Write("Do they have access to Pluralsight? \n" +
+                "1. Yes\n" +
+                "2. No\n");
+                string pluralSightAnswer = Console.ReadLine();
+                switch (pluralSightAnswer.ToLower())
+                {
+                    case "1":
+                    case "yes":
+                        oldDev.HasAccessToPluralsight = true;
+                        break;
+                    case "2":
+                    case "no":
+                    default:
+                        oldDev.HasAccessToPluralsight = false;
+                        break;
+
+                }
+
+                Console.Write("What team is the new Developer on? \n" +
+               "1. FrontEnd \n" +
+               "2. BackEnd \n" +
+               "3. Testing \n");
+
+                string assignmentAnswer = Console.ReadLine();
+
+                switch (assignmentAnswer.ToLower())
+                {
+                    case "1":
+                    case "frontend":
+                    default://if something goes wrong check here
+                        oldDev.Assignment = TeamAssignment.FrontEnd;
+                        break;
+                    case "2":
+                    case "backend":
+                        oldDev.Assignment = TeamAssignment.BackEnd;
+                        break;
+                    case "3":
+                    case "testing":
+                        oldDev.Assignment = TeamAssignment.Testing;
+                        break;
+                }
+
+
+            }
+            else
+                Console.WriteLine("No one to update");
+            AnyKey();
+
+
+        }
+
+
+
+
 
         private void DisplayAllDevelopers()
         {
@@ -230,6 +326,36 @@ namespace DevTeams_Challenge_Console
             else
             {
                 Console.WriteLine("No ID found");
+            }
+            AnyKey();
+
+        }
+
+
+
+
+        private void DeleteExistingDeveloper()
+        {
+            Console.Clear();
+
+            List<Developer> devList = _repo.GetAllDevs();
+
+            foreach (Developer dev in devList)
+            {
+                ShowDevs(dev);
+            }
+
+            Console.Write("Enter the ID number of the individual you would like to fire: ");
+
+            int userAnser = int.Parse(Console.ReadLine());
+
+            if (_repo.RemoveDevById(userAnser))
+            {
+                Console.WriteLine("Developer successfully fired!");
+            }
+            else
+            {
+                Console.WriteLine("No Developer found by that ID");
             }
             AnyKey();
 

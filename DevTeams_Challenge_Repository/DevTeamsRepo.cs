@@ -75,12 +75,24 @@ namespace DevTeams_Challenge_Repository
 
         }
         // D
-        public bool DeleteExistingDeveloper(Developer firedDeveloper)
+        public bool RemoveDeveloper(Developer firedDeveloper)
         {
             bool deleteDeveloper = _devDirectory.Remove(firedDeveloper);
             return deleteDeveloper;
         }
         
+
+        public bool RemoveDevById(int id)
+        {
+            var dev = GetDevById(id);
+            if (dev != null)
+            {
+                bool deleteDev = _devDirectory.Remove(dev);
+                return deleteDev;
+            }
+            else
+                return false;
+        }
 
         
     }
