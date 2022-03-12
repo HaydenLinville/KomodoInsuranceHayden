@@ -19,6 +19,7 @@ namespace DevTeams_Challenge_Repository
             ID = iD;
             HasAccessToPluralsight = pluralsight;
             Assignment = assignment;
+             
 
 
         }

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace DevTeams_Challenge_Repository
 {
-    public class DevTeamsRepo
+    public class DeveloperRepo
     {
         //This is our Repository class that will hold our directory (which will act as our database) and methods that will directly talk to our directory.
 
-        private List<Developer> _devDirectory = new List<Developer>();
+        private readonly List<Developer> _devDirectory = new List<Developer>();
 
+
+        //added readonly 
         // C
 
         public bool CreateNewDeveloper(Developer developer)
@@ -22,6 +24,8 @@ namespace DevTeams_Challenge_Repository
             return wasAdded;
 
         }
+
+
 
         // R
         public List<Developer> GetAllDevs()
@@ -41,11 +45,11 @@ namespace DevTeams_Challenge_Repository
             }
             return devList;
         }
-
         public Developer GetDevById(int iD)
         {
             foreach(Developer number in _devDirectory)
             {
+                
                 if(number.ID == iD)
                 {
                     return number;
@@ -53,6 +57,15 @@ namespace DevTeams_Challenge_Repository
             }
             return null;
         }
+
+
+        //Jacob's code 
+        public List<Developer> GetByTeamAssignment(TeamAssignment assignment)
+        {
+            return _devDirectory.Where(d => d.Assignment == assignment).ToList();
+        }
+
+
         // U
         public bool UpdateExistingDeveloper(int oldId, Developer newDeveloper)
         {
