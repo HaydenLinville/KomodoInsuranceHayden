@@ -11,26 +11,38 @@ namespace DevTeams_Challenge_Repository
         //This is our Repository class that will hold our directory (which will act as our database) and methods that will directly talk to our directory.
 
         private readonly List<Developer> _devDirectory = new List<Developer>();
+        protected int _id = 1;
 
-
-        //added readonly 
         // C
-
         public bool CreateNewDeveloper(Developer developer)
         {
             int startingCount = _devDirectory.Count();
+            developer.ID = _id; 
             _devDirectory.Add(developer);
+            _id++;
             bool wasAdded = (_devDirectory.Count() > startingCount) ? true : false;
             return wasAdded;
-
         }
-
-
 
         // R
         public List<Developer> GetAllDevs()
         {
             return _devDirectory;
+        }
+
+        
+        public List<Developer> GetDevsNeedPluralsight()
+        {
+            List<Developer> plurList = new List<Developer>();
+            foreach(Developer dev in _devDirectory)
+            {
+                if (dev.HasAccessToPluralsight == false)
+                {
+                    plurList.Add(dev);
+                }
+            }
+            return plurList;
+            
         }
 
         public List<Developer> GetDevsByAssignment(TeamAssignment assignment)
@@ -45,6 +57,8 @@ namespace DevTeams_Challenge_Repository
             }
             return devList;
         }
+
+
         public Developer GetDevById(int iD)
         {
             foreach(Developer number in _devDirectory)
@@ -59,7 +73,6 @@ namespace DevTeams_Challenge_Repository
         }
 
 
-        //Jacob's code 
         public List<Developer> GetByTeamAssignment(TeamAssignment assignment)
         {
             return _devDirectory.Where(d => d.Assignment == assignment).ToList();
@@ -84,9 +97,9 @@ namespace DevTeams_Challenge_Repository
             {
                 return false;
             }
-   
-
         }
+
+
         // D
         public bool RemoveDeveloper(Developer firedDeveloper)
         {

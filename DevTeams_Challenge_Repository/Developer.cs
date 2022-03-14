@@ -24,13 +24,6 @@ namespace DevTeams_Challenge_Repository
 
         }
 
-        //This is our POCO class. It will define our properties and constructors of our Developer objects.
-        //Developer objects should have the following properties
-            //ID (int)
-            //FirstName
-            //LastName
-            //a bool that shows whether they have access to the online learning tool Pluralsight.
-            //TeamAssignment - use the enum declared above this class
         public string FirstName { get; set; }
         public int ID { get; set; }
 

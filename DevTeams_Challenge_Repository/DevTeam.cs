@@ -18,15 +18,11 @@ namespace DevTeams_Challenge_Repository
             TeamName = name;
 
         }
-
-
         
 
         public int TeamID { get; set; }
 
-        //TeamMembers rr for developers to help keep straight 
-
-        public List<Developer> TeamMembers { get; set; }
+        public List<Developer> TeamMembers { get; set; } = new List<Developer>();
 
         public string TeamName { get; set; }
     }

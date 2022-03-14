@@ -24,7 +24,6 @@ namespace DevTeams_Challenge_Console
     {
         //This class will be how we interact with our user through the console. When we need to access our data, we will call methods from our Repo class.
 
-        private DeveloperRepo _devRepo = new DeveloperRepo();
         private DevTeamRepo _teamRepo = new DevTeamRepo();
 
         public void Run()
@@ -45,10 +44,10 @@ namespace DevTeams_Challenge_Console
             bool continueToRun = true;
             while (continueToRun)
             {
-                bool showDev = true;
-                if (showDev)
-                {
-                    //Developer menue
+               // bool showDev = true;
+                //if (showDev)
+                //{
+                    
                     Console.Clear();
 
                     Console.WriteLine("Enter the number that corresponds to the option you would like: \n" +
@@ -60,12 +59,15 @@ namespace DevTeams_Challenge_Console
                         "6. Remove developer \n" +
                         "7. Create a new team \n" +
                         "8. Show me all teams \n" +
-                        "9. Add developer to a team \n" +
-                        "10. Remove devloper from a team \n" +
-                        "11. Display team by ID \n" +
-                        "12. Update team \n" +
-                        "13. Remove team\n" +
-                        "14. Exit");
+                        "9. Add a developer to a team \n" +
+                        "10. Remove a devloper from a team \n" +
+                        "11. Add multiple developers to a team \n" +
+                        "12. Remove multiple developers from a team \n" +
+                        "13. Display team by ID \n" +
+                        "14. Update team \n" +
+                        "15. Remove team\n" +
+                        "16. Check developers that need Pluralsight\n" +
+                        "17. Exit \n");
 
                     string userInput = Console.ReadLine();
                     switch (userInput)
@@ -88,7 +90,6 @@ namespace DevTeams_Challenge_Console
                         case "6":
                             DeleteExistingDeveloper();
                             break;
-
                         case "7":
                             CreateNewTeam();
                             break;
@@ -102,15 +103,24 @@ namespace DevTeams_Challenge_Console
                             RemoveDeveloperFromTeam();
                             break;
                         case "11":
-                            DisplayTeamByTeamId();
+                            AddMultipleDevelopersToTeam();
                             break;
                         case "12":
-                            UpdateTeam();
+                            RemoveMultipleDevelopersFromTeam();
                             break;
                         case "13":
-                            DeleteExistingTeam();
+                            DisplayTeamByTeamId();
                             break;
                         case "14":
+                            UpdateTeam();
+                            break;
+                        case "15":
+                            DeleteExistingTeam();
+                            break;
+                        case "16":
+                            DisplayDevelopersNeedPluralsight();
+                            break;
+                        case "17":
                         case "e":
                         case "exit":
                         case "Exit":
@@ -125,7 +135,7 @@ namespace DevTeams_Challenge_Console
                     }
 
 
-                }
+               // }
                 
 
 
@@ -136,6 +146,7 @@ namespace DevTeams_Challenge_Console
         {
             Console.Clear();
             Developer dev = new Developer();
+            //DevTeam team = new DevTeam();
 
             //First Name
             Console.Write("What is the first name of the new Developer? ");
@@ -146,7 +157,7 @@ namespace DevTeams_Challenge_Console
             dev.LastName = Console.ReadLine();
 
             //ID
-            Console.Write("What is the three digit ID number of the new Developer? ");
+            Console.Write("What is the temporary ID number of the new Developer? ");
             dev.ID = int.Parse(Console.ReadLine());
 
 
@@ -181,7 +192,7 @@ namespace DevTeams_Challenge_Console
             {
                 case "1":
                 case "frontend":
-                default://if something goes wrong check here
+                default:
                     dev.Assignment = TeamAssignment.FrontEnd;
                     break;
                 case "2":
@@ -194,9 +205,26 @@ namespace DevTeams_Challenge_Console
                     break;
             }
 
-            if(_devRepo.CreateNewDeveloper(dev))
+
+            if (_teamRepo.CreateNewDeveloper(dev))
             {
                 Console.WriteLine("New Developer added!");
+                Console.Write("Would you like to add the new developer to a team?\n" +
+                    "1. Yes \n" +
+                    "2. No \n");
+                string teamAnswer = Console.ReadLine();
+                switch(teamAnswer.ToLower())
+                {
+                    case "1":
+                    case "yes":
+                        AddDeveloperToTeam();
+                        break;
+                    case "2":
+                    case "no":
+                    default:
+                        break;
+                }//checking to see if it works
+                
             }
             else
             {
@@ -204,7 +232,7 @@ namespace DevTeams_Challenge_Console
             }
 
             AnyKey();
-            //Assignment (which team)
+            
 
 
 
@@ -215,7 +243,7 @@ namespace DevTeams_Challenge_Console
         {
 
             Console.Clear();
-            List<Developer> listOfDevs = _devRepo.GetAllDevs();
+            List<Developer> listOfDevs = _teamRepo.GetAllDevs();
             foreach (Developer dev in listOfDevs)
             {
                 ShowDevs(dev);
@@ -226,7 +254,7 @@ namespace DevTeams_Challenge_Console
             Console.Write("Please provide the ID number of the developer you would like to update: ");
             int answer = int.Parse(Console.ReadLine());
 
-            Developer oldDev = _devRepo.GetDevById(answer);
+            Developer oldDev = _teamRepo.GetDevById(answer);
 
             if (oldDev != null)
             {
@@ -245,13 +273,6 @@ namespace DevTeams_Challenge_Console
                     oldDev.LastName = newLast;
                 }
 
-                Console.Write("Please enter the new ID number: ");
-                string newiD = Console.ReadLine();
-
-                if (newiD != "")
-                {
-                    oldDev.ID = int.Parse(newiD);
-                }
 
                 Console.Write("Do they have access to Pluralsight? \n" +
                 "1. Yes\n" +
@@ -282,7 +303,7 @@ namespace DevTeams_Challenge_Console
                 {
                     case "1":
                     case "frontend":
-                    default://if something goes wrong check here
+                    default:
                         oldDev.Assignment = TeamAssignment.FrontEnd;
                         break;
                     case "2":
@@ -305,13 +326,21 @@ namespace DevTeams_Challenge_Console
         }
 
 
-
-
+        private void DisplayDevelopersNeedPluralsight()
+        {
+            Console.Clear();
+            List<Developer> listOfPluralsight = _teamRepo.GetDevsNeedPluralsight();
+            foreach (Developer dev in listOfPluralsight)
+            {
+                ShowDevs(dev);
+            }
+            AnyKey();
+        }
 
         private void DisplayAllDevelopers()
         {
             Console.Clear();
-            List<Developer> listOfDevs = _devRepo.GetAllDevs();
+            List<Developer> listOfDevs = _teamRepo.GetAllDevs();
             foreach (Developer dev in listOfDevs)
             {
                 ShowDevs(dev);
@@ -352,7 +381,7 @@ namespace DevTeams_Challenge_Console
 
 
 
-            List<Developer> displayDevTeam = _devRepo.GetDevsByAssignment(assignment);
+            List<Developer> displayDevTeam = _teamRepo.GetDevsByAssignment(assignment);
             foreach (Developer dev in displayDevTeam)
             {
                 ShowDevs(dev);
@@ -370,7 +399,7 @@ namespace DevTeams_Challenge_Console
             Console.Write("Enter ID: ");
             int iD = int.Parse(Console.ReadLine());
 
-            Developer dev = _devRepo.GetDevById(iD);
+            Developer dev = _teamRepo.GetDevById(iD);
             if (dev != null)
             {
                 ShowDevs(dev);
@@ -390,20 +419,22 @@ namespace DevTeams_Challenge_Console
         {
             Console.Clear();
 
-            List<Developer> devList = _devRepo.GetAllDevs();
+            List<Developer> devList = _teamRepo.GetAllDevs();
 
             foreach (Developer dev in devList)
             {
                 ShowDevs(dev);
             }
 
-            Console.Write("Enter the ID number of the individual you would like to fire: ");
+            Console.Write("Enter the ID number of the individual you would like to delete: ");
 
             int userAnser = int.Parse(Console.ReadLine());
 
-            if (_devRepo.RemoveDevById(userAnser))
+            if (_teamRepo.RemoveDevById(userAnser))
             {
-                Console.WriteLine("Developer successfully fired!");
+                Console.WriteLine("Developer successfully deleted! You must now remove that developer from any teams they were on.");
+                AnyKey();
+                RemoveDeveloperFromTeam();
             }
             else
             {
@@ -438,15 +469,20 @@ namespace DevTeams_Challenge_Console
 
             DevTeam devTeams = _teamRepo.GetDevTeamById(answer);
             ShowTeam(devTeams);
+            AnyKey();
         }
 
 
         private void AddDeveloperToTeam()
         {
-            Console.Clear();
+            
+            
+            DisplayAllDevelopers();
 
             Console.Write("What is the ID of the Developer you would like to add? ");
             int devId = int.Parse(Console.ReadLine());
+
+            DisplayAllTeams();
 
             Console.Write("What is the Team ID of the Team you would like the new Developer on? ");
             int teamId = int.Parse(Console.ReadLine());
@@ -472,13 +508,46 @@ namespace DevTeams_Challenge_Console
 
             team.TeamName = Console.ReadLine();
             //teamID
-            Console.Write("What is the team ID? ");
-            team.TeamID = int.Parse(Console.ReadLine());
+           // Console.Write("What is the temporary team ID? ");
+            //team.TeamID = int.Parse(Console.ReadLine());
 
 
             if(_teamRepo.AddNewTeam(team))
             {
-                Console.WriteLine("New Team Created!");
+
+                Console.WriteLine("New Team Created! Let's add some team memebers!");
+                AnyKey();
+
+                bool keepRunning = true;
+                while(keepRunning)
+                {
+                    Console.Write("Would you like to: \n" +
+                        "1. Create new Developer to add to my team. \n" +
+                        "2. Add exisiting Developer to my team. \n" +
+                        "3. Add multiple exisiting Developers to my team. \n" +
+                        "4. Exit. \n");
+
+                    string answer = Console.ReadLine();
+                    switch(answer.ToLower())
+                    {
+                        case "1":
+                            CreateNewDeveloper();
+                            break;
+                        case "2":
+                            AddDeveloperToTeam();
+                            break;
+                        case "3":
+                            AddMultipleDevelopersToTeam();
+                            break;
+                        case "4":
+                        case "exit":
+                        case "e":
+                        default:
+                            keepRunning = false;
+                            break;
+                    }
+
+                }
             }
             else
             {
@@ -486,10 +555,48 @@ namespace DevTeams_Challenge_Console
             }
             AnyKey();
 
-            
+        }
+
+        private void RemoveMultipleDevelopersFromTeam()
+        {
+            Console.Clear();
+            DisplayAllTeams();
+            Console.Write("Enter the ID numbers of the developers you would like to remove (please separate them with a space)  ");
+            string devId = Console.ReadLine();
+            var splitId = devId.Split(' ');
+
+            //DisplayAllDevelopers();
+            Console.Write("What is the team ID? ");
+            int teamId = int.Parse(Console.ReadLine());
+            foreach(var id in splitId)
+            {
+                _teamRepo.RemoveDeveloperFromTeamById(int.Parse(id), teamId);
+            }
+            Console.WriteLine("You removed all selected developers! \n");
+
+            AnyKey();
+        }
 
 
+        private void AddMultipleDevelopersToTeam()
+        {
+            ///Com back to this 
+            Console.Clear();
+            DisplayAllDevelopers();
+            Console.Write("Please enter the ID numbers of the developers you would like to add (please separate them with a space) ");
+            string devID = Console.ReadLine();
+            var splitId = devID.Split(' ');
 
+            DisplayAllTeams();
+            Console.Write("What is the team ID you would like to add these developers to? ");
+            int teamId = int.Parse(Console.ReadLine());
+            foreach(var id in splitId)
+            {
+                _teamRepo.AddDeveloperToTeamById(int.Parse(id), teamId);
+                    
+
+            }
+            Console.WriteLine("Awesome job adding developers to team! \n");
 
         }
 
@@ -517,19 +624,35 @@ namespace DevTeams_Challenge_Console
                     oldTeam.TeamName = newName;
                 }
 
-                Console.Write("Please enter the new ID number for the team: ");
-                string newId = Console.ReadLine();
-                if (newId != "")
+
+                bool keepGoing = true;
+                while (keepGoing)
                 {
-                    oldTeam.TeamID = int.Parse(newId);
+
+                Console.Write("Please select what you would like to edit \n" +
+                    "1. Add developers \n" +
+                    "2. Remove developers \n" +
+                    "3. I am done editing \n");
+                string reponse = Console.ReadLine();
+                switch (reponse.ToLower())
+                {
+                    case "1":
+                            AddMultipleDevelopersToTeam();
+                        //AddDeveloperToTeam();
+                        break;
+                    case "2":
+                            RemoveMultipleDevelopersFromTeam();
+                        //RemoveDeveloperFromTeam();
+                        break;
+                    case "3":
+                            keepGoing = false;
+                        break;
+                }
                 }
 
             }
             else Console.WriteLine("No team found to update");
             AnyKey();
-
-
-
         }
 
 
@@ -583,18 +706,7 @@ namespace DevTeams_Challenge_Console
                 Console.WriteLine("No Team found by that ID");
             }
             AnyKey();
-
-
         }
-
-
-
-        // Helpermethods you should write
-        // A method to print a developer's first and last name, useful in display all
-        // private void DisplayDevBasicInfo(Developer dev) {}
-
-        // A method to print a developers full information, useful when showing one developer
-        // private void DisplayDevFullInfo(Developer dev) {}
 
 
         private void SeedContent()
@@ -606,18 +718,15 @@ namespace DevTeams_Challenge_Console
             Developer meryl = new Developer("Meryl", "Streep", 444, true, TeamAssignment.Testing);
             Developer jim = new Developer("Jimmy", "Johns", 111, false, TeamAssignment.BackEnd);
 
-            _devRepo.CreateNewDeveloper(bill);
-            _devRepo.CreateNewDeveloper(jill);
-            _devRepo.CreateNewDeveloper(crunchy);
-            _devRepo.CreateNewDeveloper(ted);
-            _devRepo.CreateNewDeveloper(meryl);
-            _devRepo.CreateNewDeveloper(jim);
-
+            _teamRepo.CreateNewDeveloper(bill);
+            _teamRepo.CreateNewDeveloper(jill);
+            _teamRepo.CreateNewDeveloper(crunchy);
+            _teamRepo.CreateNewDeveloper(ted);
+            _teamRepo.CreateNewDeveloper(meryl);
+            _teamRepo.CreateNewDeveloper(jim);
 
             List<Developer> teamA = new List<Developer>();
             List<Developer> teamB = new List<Developer>();
-
-            
 
             teamA.Add(bill);
             teamA.Add(jill);
@@ -635,21 +744,19 @@ namespace DevTeams_Challenge_Console
         }
 
 
-        
-
-
         private void ShowTeam(DevTeam team)
         {
+
             Console.WriteLine($"Team name : {team.TeamName} \n" +
                 $"Team ID: {team.TeamID}");
-
-
+            
 
             string nameFirst;
             string nameLast;
             int teamId;
             foreach(Developer dev in team.TeamMembers)
             {
+
                 nameFirst = dev.FirstName;
                 nameLast = dev.LastName;
                 teamId = dev.ID;
@@ -657,19 +764,16 @@ namespace DevTeams_Challenge_Console
                 Console.WriteLine($"Team memebers: {nameFirst} {nameLast} ID: {teamId}");
             }
             Console.WriteLine();
+
         }
 
         private void ShowDevs(Developer developer)
         {
-
-            string answer = (developer.HasAccessToPluralsight) ? "yes" : "No";
             Console.WriteLine($"Developer's Name : {developer.FirstName} {developer.LastName} \n" +
                 $"Developer ID number: {developer.ID} \n" +
-                $"Do they have access to Pluralsight: {answer}\n" +
+                $"Do they have access to Pluralsight: {(developer.HasAccessToPluralsight ? "Yes" : "No")}\n" +
                 $"Developer team: {developer.Assignment}\n");
-
         }
-
 
         private void AnyKey()
         {
@@ -677,7 +781,6 @@ namespace DevTeams_Challenge_Console
             Console.ReadKey();
 
         }
-
 
     }
 }

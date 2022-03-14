@@ -6,23 +6,19 @@ using System.Threading.Tasks;
 
 namespace DevTeams_Challenge_Repository
 {
-    public class DevTeamRepo
+    public class DevTeamRepo : DeveloperRepo
     {
 
         private List<DevTeam> _devTeamDirectory = new List<DevTeam>();
-        private readonly DeveloperRepo _developers = new DeveloperRepo();
+        protected int _teamId = 1;
 
-
-        // need to figure out create new dev team
-        // add developer to team
-        // update team
-
-        //c
-
+        //C
         public bool AddNewTeam(DevTeam team)
         {
             int startingCount = _devTeamDirectory.Count();
+            team.TeamID = _teamId; 
             _devTeamDirectory.Add(team);
+            _teamId++;
             bool wasAdded = (_devTeamDirectory.Count() > startingCount) ? true : false;
             return wasAdded;
         }
@@ -30,10 +26,11 @@ namespace DevTeams_Challenge_Repository
         public bool AddDeveloperToTeamById(int devId, int teamId)
         {
             
-            Developer dev = _developers.GetDevById(devId);
+            Developer dev = GetDevById(devId);
             DevTeam dTeam = GetDevTeamById(teamId);
-            if(dev != default && dTeam != default)
+            if(dev != null && dTeam != default)
             {
+                
 
             int startingCount = dTeam.TeamMembers.Count();
             dTeam.TeamMembers.Add(dev);
@@ -42,12 +39,12 @@ namespace DevTeams_Challenge_Repository
             }
             return false;
         }
-        //r
+
+        //R
         public List<DevTeam> GetAllTeams()
         {
             return _devTeamDirectory;
         }
-
 
 
         public DevTeam GetDevTeamById(int teamId)
@@ -55,8 +52,7 @@ namespace DevTeams_Challenge_Repository
             return _devTeamDirectory.Where(d => d.TeamID == teamId).SingleOrDefault();
         }
 
-        //u
-
+        //U
         public bool UpdateExistingTeam(int teamId, DevTeam newTeam)
         {
             DevTeam oldTeam = GetDevTeamById(teamId);
@@ -73,10 +69,7 @@ namespace DevTeams_Challenge_Repository
             }
         }
 
-
-
-        //d
-        //Jacob code take a look 
+        //D
         public bool RemoveDeveloperFromTeamById(int devId, int teamId)
         {
             DevTeam dTeam = GetDevTeamById(teamId);
@@ -102,9 +95,6 @@ namespace DevTeams_Challenge_Repository
                 return false;
 
         }
-
-
-        
 
 
 
