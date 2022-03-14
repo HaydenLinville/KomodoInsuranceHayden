@@ -7,22 +7,11 @@ using System.Threading.Tasks;
 
 namespace DevTeams_Challenge_Console
 {
-    //Start with the main menu here
-    //Menu options we'll need and the methods you'll need to make
-
-    //CreateNewDeveloper();
-    //DisplayAllDevelopers();
-
-
-    //DisplayDevelopersByTeam();
-    //DisplayDeveloperById();
-    //UpdateExistingDeveloper();
-    //DeleteExistingDeveloper();
+    
 
 
     public class ProgramUI
     {
-        //This class will be how we interact with our user through the console. When we need to access our data, we will call methods from our Repo class.
 
         private DevTeamRepo _teamRepo = new DevTeamRepo();
 
@@ -32,21 +21,12 @@ namespace DevTeams_Challenge_Console
             Menu();
         }
 
-        // Could 
-
-
-        //createnew deve team();
-        //add developer to devteam ();
-
 
         private void Menu()
         {
             bool continueToRun = true;
             while (continueToRun)
             {
-               // bool showDev = true;
-                //if (showDev)
-                //{
                     
                     Console.Clear();
 
@@ -128,16 +108,11 @@ namespace DevTeams_Challenge_Console
                             break;
                         default:
                             Console.WriteLine("Error input was not one of the options above. To retry Prease any key to contniue...");
-                            Console.ReadKey(); //might come back and plug in the AnyKey helper
+                            Console.ReadKey(); 
                             break;
 
 
                     }
-
-
-               // }
-                
-
 
             }
         }
@@ -146,7 +121,6 @@ namespace DevTeams_Challenge_Console
         {
             Console.Clear();
             Developer dev = new Developer();
-            //DevTeam team = new DevTeam();
 
             //First Name
             Console.Write("What is the first name of the new Developer? ");
@@ -157,8 +131,8 @@ namespace DevTeams_Challenge_Console
             dev.LastName = Console.ReadLine();
 
             //ID
-            Console.Write("What is the temporary ID number of the new Developer? ");
-            dev.ID = int.Parse(Console.ReadLine());
+           // Console.Write("What is the temporary ID number of the new Developer? ");
+            //dev.ID = int.Parse(Console.ReadLine());
 
 
             //HasAccessToPluralsight
@@ -223,7 +197,7 @@ namespace DevTeams_Challenge_Console
                     case "no":
                     default:
                         break;
-                }//checking to see if it works
+                }
                 
             }
             else
@@ -232,9 +206,6 @@ namespace DevTeams_Challenge_Console
             }
 
             AnyKey();
-            
-
-
 
         }
 
@@ -292,7 +263,7 @@ namespace DevTeams_Challenge_Console
 
                 }
 
-                Console.Write("What team is the new Developer on? \n" +
+                Console.Write("What skill set does the new Developer have? \n" +
                "1. FrontEnd \n" +
                "2. BackEnd \n" +
                "3. Testing \n");
@@ -465,10 +436,14 @@ namespace DevTeams_Challenge_Console
         {
             Console.Clear();
             Console.Write("What team ID are you looking for? ");
-            int answer = int.Parse(Console.ReadLine());
+            
+            string answer = Console.ReadLine();
+            if(answer != "")
+            {
 
-            DevTeam devTeams = _teamRepo.GetDevTeamById(answer);
+            DevTeam devTeams = _teamRepo.GetDevTeamById(int.Parse(answer));
             ShowTeam(devTeams);
+            }
             AnyKey();
         }
 
@@ -515,7 +490,7 @@ namespace DevTeams_Challenge_Console
             if(_teamRepo.AddNewTeam(team))
             {
 
-                Console.WriteLine("New Team Created! Let's add some team memebers!");
+                Console.WriteLine("New Team Created! Let's add some team members!");
                 AnyKey();
 
                 bool keepRunning = true;
@@ -523,8 +498,8 @@ namespace DevTeams_Challenge_Console
                 {
                     Console.Write("Would you like to: \n" +
                         "1. Create new Developer to add to my team. \n" +
-                        "2. Add exisiting Developer to my team. \n" +
-                        "3. Add multiple exisiting Developers to my team. \n" +
+                        "2. Add existing Developer to my team. \n" +
+                        "3. Add multiple existing Developers to my team. \n" +
                         "4. Exit. \n");
 
                     string answer = Console.ReadLine();
@@ -580,7 +555,7 @@ namespace DevTeams_Challenge_Console
 
         private void AddMultipleDevelopersToTeam()
         {
-            ///Com back to this 
+            
             Console.Clear();
             DisplayAllDevelopers();
             Console.Write("Please enter the ID numbers of the developers you would like to add (please separate them with a space) ");
@@ -761,7 +736,7 @@ namespace DevTeams_Challenge_Console
                 nameLast = dev.LastName;
                 teamId = dev.ID;
 
-                Console.WriteLine($"Team memebers: {nameFirst} {nameLast} ID: {teamId}");
+                Console.WriteLine($"Team members: {nameFirst} {nameLast} ID: {teamId}");
             }
             Console.WriteLine();
 
@@ -777,7 +752,7 @@ namespace DevTeams_Challenge_Console
 
         private void AnyKey()
         {
-            Console.WriteLine("Press any key to contniue...");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
 
         }
